@@ -1,7 +1,17 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import reactLogo from "~/assets/react.svg";
 
+const handleButtonClick = () => {
+  return fetch("/api/subscribe", {
+    method: "POST",
+    body: JSON.stringify({ time: Date.now() }),
+  });
+};
+
 const Home: React.FC = () => {
+  const [payload, setPayload] = useState();
+
   return (
     <div className="App">
       <div>
@@ -18,6 +28,24 @@ const Home: React.FC = () => {
           Visit <Link to="/ssr">/my-dynamic-url</Link> to see the
           server-side-rendered content.
         </p>
+        <p>
+          <button
+            onClick={() =>
+              handleButtonClick().then(async (res) => {
+                const data = await res.json();
+                setPayload(data);
+              })
+            }
+          >
+            Click here
+          </button>{" "}
+          to make a request to the API.
+        </p>
+        {payload && (
+          <p>
+            Received payload:<code>{JSON.stringify(payload)}</code>
+          </p>
+        )}
         <p>
           Checkout template from{" "}
           <a href="https://github.com/stormkit-io/monorepo-template">GitHub</a>

@@ -4,6 +4,7 @@ import path from "path";
 import express from "express";
 import { fileURLToPath } from "node:url";
 import { createServer as createViteServer } from "vite";
+import { matchPath } from "@stormkit/serverless/router";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -27,6 +28,27 @@ async function createServer() {
   // use vite's connect instance as middleware
   // if you use your own express router (express.Router()), you should use router.use
   app.use(vite.middlewares);
+
+  // Add support for a local environment API.
+  app.all(/\/api(\/.*|$)/, async (req, res) => {
+    const route = matchPath(
+      path.join(__dirname, "api"),
+      req.originalUrl.split(/\?|#/)[0].replace("/api", ""),
+      req.method
+    );
+
+    if (!route) {
+      res.status(404);
+      res.send();
+      return;
+    }
+
+    const handler = (await vite.ssrLoadModule(`/src/api/${route}`)) as {
+      default: express.Handler;
+    };
+
+    handler.default(req, res, () => {});
+  });
 
   app.get("*", async (req, res, next) => {
     try {
