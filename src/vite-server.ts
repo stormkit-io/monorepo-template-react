@@ -69,4 +69,66 @@ async function createServer() {
   });
 }
 
-createServer();
+async function generateStaticPages() {
+  // Create Vite server to load the routes files
+  const vite = await createViteServer({
+    server: { middlewareMode: true },
+    appType: "custom",
+  });
+
+  const { default: routesToPrerender } = (await vite.ssrLoadModule(
+    "./src/prerender"
+  )) as { default: string[] };
+
+  const { render } = await vite.ssrLoadModule("./src/entry-server");
+
+  const dist = path.join(path.dirname(__dirname), ".stormkit/public");
+
+  if (!fs.existsSync(dist)) {
+    throw new Error(
+      ".stormkit/public is not available. Did you run `npm run build:spa`?"
+    );
+  }
+
+  const template = fs.readFileSync(path.join(dist, "index.html"), "utf-8");
+  const manifest = JSON.parse(
+    fs.readFileSync(path.join(dist, "manifest.json"), "utf-8")
+  );
+
+  // Push `/` to the end if any.
+  routesToPrerender.sort((a: string, b: string) => {
+    return a === "/" || b === "/" ? -1 : 0;
+  });
+
+  for (const r of routesToPrerender) {
+    const data = await render(r);
+    const fileName = r.endsWith("/") ? `${r}index.html` : `${r}.html`;
+    const absPath = path.join(dist, fileName);
+    let content = injectContent(data.head, data.content, template);
+
+    // Fix the path to the static assets.
+    Object.keys(manifest).forEach((fileName) => {
+      if (fileName.startsWith("src/assets")) {
+        content = content.replace(fileName, manifest[fileName].fileName);
+      }
+    });
+
+    fs.mkdirSync(path.dirname(absPath), { recursive: true });
+    fs.writeFileSync(absPath, content, "utf-8");
+
+    console.log(`Prerendered: ${fileName}`);
+  }
+
+  fs.unlinkSync(path.join(dist, "manifest.json"));
+
+  await vite.close();
+}
+
+(async () => {
+  if (process.env.SSG === "true") {
+    console.info("Detected SSG=true - generating static routes...");
+    await generateStaticPages();
+  } else {
+    createServer();
+  }
+})();

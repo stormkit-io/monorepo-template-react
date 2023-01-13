@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon --watch './**/*.ts' --exec 'node --loader ts-node/esm' src/vite-server.ts",
-    "build": "tsc && vite build",
+    "build": "npm run build:spa && npm run build:ssg",
+    "build:spa": "tsc && vite build",
+    "build:ssg": "tsc && SSG=true node --loader ts-node/esm ./src/vite-server.ts",
     "preview": "vite preview"
   },
   "dependencies": {
