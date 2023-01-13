@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import { viteStaticCopy } from "vite-plugin-static-copy";
 import path from "node:path";
 import react from "@vitejs/plugin-react";
 import pj from "./package.json";
@@ -37,5 +38,15 @@ export default defineConfig({
       },
     },
   },
-  plugins: [react()],
+  plugins: [
+    react(),
+    viteStaticCopy({
+      targets: [
+        {
+          src: ".stormkit/public/index.html",
+          dest: "../.stormkit/server",
+        },
+      ],
+    }),
+  ],
 });
