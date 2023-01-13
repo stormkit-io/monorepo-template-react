@@ -5,9 +5,6 @@ import glob from "glob";
 import { build } from "vite";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const pj = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "package.json"), "utf-8")
-);
 
 const files = glob.sync("src/api/**/*.ts").map((file: string) => ({
   entry: `./${file}`,
@@ -17,9 +14,14 @@ const files = glob.sync("src/api/**/*.ts").map((file: string) => ({
 files.forEach(async (file: { entry: string; distFileName: string }) => {
   await build({
     ssr: {
-      noExternal: Object.keys(pj.dependencies || {}).concat(
-        Object.keys(pj.devDependencies || {})
-      ),
+      noExternal: fs
+        .readdirSync(path.join(__dirname, "node_modules"), {
+          withFileTypes: true,
+        })
+        .filter(
+          (dirent) => dirent.isDirectory() && !dirent.name.startsWith(".")
+        )
+        .map((dirent) => new RegExp(dirent.name)),
     },
     configFile: false,
     resolve: {

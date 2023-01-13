@@ -1,17 +1,22 @@
 import { defineConfig } from "vite";
 import { viteStaticCopy } from "vite-plugin-static-copy";
+import { fileURLToPath } from "node:url";
 import path from "node:path";
+import fs from "node:fs";
 import react from "@vitejs/plugin-react";
-import pj from "./package.json";
 
 process.env.NODE_ENV = "production";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://vitejs.dev/config/
 export default defineConfig({
   ssr: {
-    noExternal: Object.keys(pj.dependencies || {}).concat(
-      Object.keys(pj.devDependencies || {})
-    ),
+    noExternal: fs
+      .readdirSync(path.join(__dirname, "node_modules"), {
+        withFileTypes: true,
+      })
+      .filter((dirent) => dirent.isDirectory() && !dirent.name.startsWith("."))
+      .map((dirent) => new RegExp(dirent.name)),
   },
   resolve: {
     alias: [
