@@ -4,13 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "nodemon --watch './**/*.ts' --exec 'node --loader ts-node/esm' src/vite-server.ts",
+    "dev": "NODE_NO_WARNINGS=1 nodemon --watch './**/*.ts' --exec 'node --loader ts-node/esm' src/vite-server.ts",
     "build": "npm run build:spa && npm run build:ssr && npm run build:ssg && npm run build:api",
     "build:spa": "tsc && vite build",
     "build:ssg": "tsc && SSG=true node --loader ts-node/esm ./src/vite-server.ts",
     "build:ssr": "tsc && vite build -c vite.config.ssr.ts",
-    "build:api": "rm -rf .stormkit/api && node --loader ts-node/esm vite.config.api.ts",
-    "preview": "vite preview"
+    "build:api": "rm -rf .stormkit/api && node --loader ts-node/esm vite.config.api.ts"
   },
   "dependencies": {
     "react": "^18.2.0",
