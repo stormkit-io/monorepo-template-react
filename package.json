@@ -3,6 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "author": {
+    "email": "hello@stormkit.io",
+    "name": "Stormkit",
+    "url": "https://www.stormkit.io"
+  },
   "scripts": {
     "dev": "NODE_NO_WARNINGS=1 nodemon --watch './**/*.ts' --exec 'node --loader ts-node/esm' src/vite-server.ts",
     "build": "npm run build:spa && npm run build:ssr && npm run build:ssg && npm run build:api",
@@ -16,7 +21,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@stormkit/serverless": "^0.17.4",
+    "@stormkit/serverless": "^1.0.3",
     "@types/express": "^4.17.15",
     "@types/glob": "^8.0.0",
     "@types/node": "^18.11.18",
