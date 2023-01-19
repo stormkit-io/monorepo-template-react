@@ -6,10 +6,16 @@ import { build } from "vite";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const files = glob.sync("src/api/**/*.ts").map((file: string) => ({
-  entry: `./${file}`,
-  distFileName: file.replace("src/api/", "").replace(".ts", ""),
-}));
+const files = glob
+  .sync("src/api/**/*.ts")
+  // Filter out private files
+  .filter((file) => {
+    return file.indexOf("_") !== 0 && file.indexOf("/_") === -1;
+  })
+  .map((file: string) => ({
+    entry: `./${file}`,
+    distFileName: file.replace("src/api/", "").replace(".ts", ""),
+  }));
 
 files.forEach(async (file: { entry: string; distFileName: string }) => {
   await build({
