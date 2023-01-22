@@ -60,6 +60,7 @@ files.forEach(async (file: { entry: string; distFileName: string }) => {
         output: {
           dir: ".stormkit/api",
           format: "cjs",
+          manualChunks: () => "",
         },
       },
       minify: false,
