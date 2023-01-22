@@ -2,8 +2,10 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 import fs from "node:fs";
 import glob from "glob";
+import dotenv from "dotenv";
 import { build } from "vite";
 
+dotenv.config();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const files = glob
@@ -38,6 +40,15 @@ files.forEach(async (file: { entry: string; distFileName: string }) => {
         },
       ],
       extensions: [".ts", ".tsx"],
+    },
+    define: {
+      ...Object.keys(process.env).reduce(
+        (obj: Record<string, string>, key: string) => {
+          obj[`process.env.${key}`] = JSON.stringify(process.env[key]);
+          return obj;
+        },
+        {}
+      ),
     },
     build: {
       ssr: true,

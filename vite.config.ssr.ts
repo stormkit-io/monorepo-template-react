@@ -1,10 +1,12 @@
-import { defineConfig } from "vite";
-import { viteStaticCopy } from "vite-plugin-static-copy";
-import { fileURLToPath } from "node:url";
 import path from "node:path";
 import fs from "node:fs";
+import { fileURLToPath } from "node:url";
+import { defineConfig } from "vite";
+import { viteStaticCopy } from "vite-plugin-static-copy";
 import react from "@vitejs/plugin-react";
+import dotenv from "dotenv";
 
+dotenv.config();
 process.env.NODE_ENV = "production";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -42,6 +44,15 @@ export default defineConfig({
         exports: "named",
       },
     },
+  },
+  define: {
+    ...Object.keys(process.env).reduce(
+      (obj: Record<string, string>, key: string) => {
+        obj[`process.env.${key}`] = JSON.stringify(process.env[key]);
+        return obj;
+      },
+      {}
+    ),
   },
   plugins: [
     react(),
