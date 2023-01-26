@@ -19,51 +19,54 @@ const files = glob
     distFileName: file.replace("src/api/", "").replace(".ts", ""),
   }));
 
-files.forEach(async (file: { entry: string; distFileName: string }) => {
-  await build({
-    ssr: {
-      noExternal: fs
-        .readdirSync(path.join(__dirname, "node_modules"), {
-          withFileTypes: true,
-        })
-        .filter(
-          (dirent) => dirent.isDirectory() && !dirent.name.startsWith(".")
-        )
-        .map((dirent) => new RegExp(dirent.name)),
-    },
-    configFile: false,
-    resolve: {
-      alias: [
-        {
-          find: /^~/,
-          replacement: path.resolve(__dirname, "src"),
-        },
-      ],
-      extensions: [".ts", ".tsx"],
-    },
-    define: {
-      ...Object.keys(process.env).reduce(
-        (obj: Record<string, string>, key: string) => {
-          obj[`process.env.${key}`] = JSON.stringify(process.env[key]);
-          return obj;
-        },
-        {}
-      ),
-    },
-    build: {
-      ssr: true,
-      copyPublicDir: false,
-      rollupOptions: {
-        input: {
-          [file.distFileName]: file.entry,
-        },
-        output: {
-          dir: ".stormkit/api",
-          format: "cjs",
-          manualChunks: () => "",
-        },
+(async () => {
+  for (const file of files) {
+    await build({
+      ssr: {
+        noExternal: fs
+          .readdirSync(path.join(__dirname, "node_modules"), {
+            withFileTypes: true,
+          })
+          .filter(
+            (dirent) => dirent.isDirectory() && !dirent.name.startsWith(".")
+          )
+          .map((dirent) => new RegExp(dirent.name)),
       },
-      minify: false,
-    },
-  });
-});
+      configFile: false,
+      resolve: {
+        alias: [
+          {
+            find: /^~/,
+            replacement: path.resolve(__dirname, "src"),
+          },
+        ],
+        extensions: [".ts", ".tsx"],
+      },
+      define: {
+        ...Object.keys(process.env).reduce(
+          (obj: Record<string, string>, key: string) => {
+            obj[`process.env.${key}`] = JSON.stringify(process.env[key]);
+            return obj;
+          },
+          {}
+        ),
+      },
+      build: {
+        ssr: true,
+        emptyOutDir: false,
+        copyPublicDir: false,
+        rollupOptions: {
+          input: {
+            [file.distFileName]: file.entry,
+          },
+          output: {
+            dir: ".stormkit/api",
+            format: "cjs",
+            manualChunks: () => "",
+          },
+        },
+        minify: false,
+      },
+    });
+  }
+})();
