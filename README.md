@@ -60,6 +60,15 @@ The API is comptabile with [Stormkit](https://www.stormkit.io). [Check the docs]
 If you need to host the API elsewhere, you'll need to change the [vite.config.api.ts](./vite.config.api.ts) file and create a bundle from it. You may
 also need to write an entry point that calls the appropriate function based on the route.
 
+## Community
+
+Here's a curated list of websites using this framework. Please feel free to add your own:
+
+| Site name | Description | 
+| --------- | ----------- |
+| [Stormkit.io](https://www.stormkit.io) | Deploy full stack javascript applications on the cloud | 
+| [Feez.ws](https://www.feez.ws) | Track your progress in public | 
+
 ## License
 
 MIT
