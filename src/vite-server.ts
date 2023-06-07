@@ -5,6 +5,9 @@ import express from "express";
 import { fileURLToPath } from "node:url";
 import { createServer as createViteServer } from "vite";
 import { matchPath } from "@stormkit/serverless/router";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
