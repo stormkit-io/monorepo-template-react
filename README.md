@@ -1,4 +1,4 @@
-> Minimal no-framework monorepo template built with Vite and React
+> Minimal no-framework monorepo template built with Vite and React Test
 
 ## Features
 
