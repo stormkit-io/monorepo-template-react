@@ -16,6 +16,8 @@
 
 ✔️ &nbsp;**Typescript:** Built-in TypeScript support
 
+✔️ &nbsp;**Jest:** Built-in Jest support
+
 ## Getting started
 
 This is a starter template for building applications with Vite and React. Click `use this template` and start working right away.
@@ -59,6 +61,24 @@ The API is comptabile with [Stormkit](https://www.stormkit.io). [Check the docs]
 
 If you need to host the API elsewhere, you'll need to change the [vite.config.api.ts](./vite.config.api.ts) file and create a bundle from it. You may
 also need to write an entry point that calls the appropriate function based on the route.
+
+## Test
+
+Jest is already preconfigured to work with this repository. Simply run:
+
+```bash
+$ npm run test
+$ yarn test
+$ pnpm run test
+```
+
+to execute all tests. You can add the `--watch` flag to keep listening to changes while testing:
+
+```bash
+$ npm run test -- --watch
+$ yarn test --watch
+$ pnpm run test --watch
+```
 
 ## Community
 
