@@ -1,5 +1,5 @@
 {
-  "name": "monorepo-template",
+  "name": "monorepo-template-react",
   "private": true,
   "version": "0.0.0",
   "type": "module",
