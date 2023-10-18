@@ -14,7 +14,7 @@ export const fetchData: FetchDataFunc = (match) => {
         head: { title: match.name },
         context: { serverTime: Date.now() },
       });
-    }, 1000);
+    }, 0.25);
   });
 };
 
