@@ -4,7 +4,7 @@ import path from "path";
 import express from "express";
 import { fileURLToPath } from "node:url";
 import { createServer as createViteServer } from "vite";
-import apiMiddleware from "@stormkit/serverless/middlewares";
+import apiMiddleware from "@stormkit/serverless/middlewares/express";
 import dotenv from "dotenv";
 
 dotenv.config();
