@@ -105,7 +105,7 @@ async function generateStaticPages() {
 
   const template = fs.readFileSync(path.join(dist, "index.html"), "utf-8");
   const manifest = JSON.parse(
-    fs.readFileSync(path.join(dist, "manifest.json"), "utf-8")
+    fs.readFileSync(path.join(dist, ".vite", "manifest.json"), "utf-8")
   );
 
   // Push `/` to the end if any.
@@ -131,8 +131,6 @@ async function generateStaticPages() {
 
     console.log(`Prerendered: ${fileName}`);
   }
-
-  fs.unlinkSync(path.join(dist, "manifest.json"));
 
   await vite.close();
 }
