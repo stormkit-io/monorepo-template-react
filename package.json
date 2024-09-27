@@ -9,12 +9,12 @@
     "url": "https://www.stormkit.io"
   },
   "scripts": {
-    "dev": "NODE_NO_WARNINGS=1 nodemon --watch './src/vite-server.ts' --exec 'node --loader ts-node/esm' src/vite-server.ts",
+    "dev": "tsx ./src/vite-server.ts",
     "build": "npm run build:spa && npm run build:ssr && npm run build:ssg && npm run build:api",
-    "build:spa": "tsc && vite build",
-    "build:ssg": "tsc && SSG=true node --loader ts-node/esm ./src/vite-server.ts",
-    "build:ssr": "tsc && vite build -c vite.config.ssr.ts",
-    "build:api": "rm -rf .stormkit/api && node --loader ts-node/esm vite.config.api.ts",
+    "build:spa": "vite build",
+    "build:ssg": "SSG=true tsx ./src/vite-server.ts",
+    "build:ssr": "vite build -c vite.config.ssr.ts",
+    "build:api": "rm -rf .stormkit/api && tsx vite.config.api.ts",
     "test": "jest"
   },
   "dependencies": {
@@ -40,7 +40,7 @@
     "react-router": "^6.6.2",
     "react-router-dom": "^6.26.2",
     "ts-jest": "^29.2.5",
-    "ts-node": "^10.9.2",
+    "tsx": "^4.19.1",
     "typescript": "^5.6.2",
     "vite": "^5.4.5",
     "vite-plugin-static-copy": "^1.0.6"
